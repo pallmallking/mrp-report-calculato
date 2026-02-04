@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Trash, Package } from '@phosphor-icons/react'
+import { Plus, Trash, Package, Sparkle } from '@phosphor-icons/react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { toast } from 'sonner'
 
 interface InventoryManagerProps {
   inventory: InventoryItem[]
@@ -90,17 +91,119 @@ export function InventoryManager({ inventory, onInventoryChange }: InventoryMana
     return { label: 'In Stock', variant: 'default' as const }
   }
 
+  const handleLoadSampleData = () => {
+    const today = new Date()
+    const getDateOffset = (days: number) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() + days)
+      return date.toISOString().split('T')[0]
+    }
+
+    const sampleInventory: InventoryItem[] = [
+      {
+        id: 'inv-steel-sheet',
+        name: 'Steel Sheet (4x8ft)',
+        onHand: 45,
+        scheduledReceipts: [
+          { id: 'sr-1', quantity: 50, dueDate: getDateOffset(7) },
+          { id: 'sr-2', quantity: 100, dueDate: getDateOffset(21) },
+        ],
+      },
+      {
+        id: 'inv-aluminum-bar',
+        name: 'Aluminum Bar Stock',
+        onHand: 120,
+        scheduledReceipts: [
+          { id: 'sr-3', quantity: 75, dueDate: getDateOffset(14) },
+        ],
+      },
+      {
+        id: 'inv-bolts',
+        name: 'Bolts M12x50mm',
+        onHand: 5,
+        scheduledReceipts: [
+          { id: 'sr-4', quantity: 500, dueDate: getDateOffset(3) },
+          { id: 'sr-5', quantity: 500, dueDate: getDateOffset(17) },
+        ],
+      },
+      {
+        id: 'inv-welding-wire',
+        name: 'Welding Wire (10kg spool)',
+        onHand: 8,
+        scheduledReceipts: [
+          { id: 'sr-6', quantity: 20, dueDate: getDateOffset(10) },
+        ],
+      },
+      {
+        id: 'inv-paint',
+        name: 'Industrial Paint (5L)',
+        onHand: 0,
+        scheduledReceipts: [
+          { id: 'sr-7', quantity: 30, dueDate: getDateOffset(5) },
+          { id: 'sr-8', quantity: 40, dueDate: getDateOffset(19) },
+        ],
+      },
+      {
+        id: 'inv-rubber-gasket',
+        name: 'Rubber Gasket',
+        onHand: 250,
+        scheduledReceipts: [],
+      },
+      {
+        id: 'inv-electric-motor',
+        name: 'Electric Motor 2.5HP',
+        onHand: 12,
+        scheduledReceipts: [
+          { id: 'sr-9', quantity: 15, dueDate: getDateOffset(28) },
+        ],
+      },
+      {
+        id: 'inv-bearings',
+        name: 'Ball Bearings 608ZZ',
+        onHand: 180,
+        scheduledReceipts: [
+          { id: 'sr-10', quantity: 200, dueDate: getDateOffset(14) },
+        ],
+      },
+      {
+        id: 'inv-plastic-housing',
+        name: 'Plastic Housing Shell',
+        onHand: 3,
+        scheduledReceipts: [
+          { id: 'sr-11', quantity: 100, dueDate: getDateOffset(6) },
+          { id: 'sr-12', quantity: 150, dueDate: getDateOffset(20) },
+        ],
+      },
+      {
+        id: 'inv-screws',
+        name: 'Wood Screws 4x40mm',
+        onHand: 850,
+        scheduledReceipts: [],
+      },
+    ]
+
+    onInventoryChange(sampleInventory)
+    toast.success('Sample inventory data loaded successfully')
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Inventory</h2>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()}>
-              <Plus className="mr-2" />
-              Add Item
+        <div className="flex gap-2">
+          {inventory.length === 0 && (
+            <Button variant="outline" onClick={handleLoadSampleData}>
+              <Sparkle className="mr-2" />
+              Load Sample Data
             </Button>
-          </DialogTrigger>
+          )}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => handleOpenDialog()}>
+                <Plus className="mr-2" />
+                Add Item
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit Inventory Item' : 'Add New Inventory Item'}</DialogTitle>
@@ -189,6 +292,7 @@ export function InventoryManager({ inventory, onInventoryChange }: InventoryMana
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {inventory.length === 0 ? (

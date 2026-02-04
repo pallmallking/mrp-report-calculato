@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Trash, Package } from '@phosphor-icons/react'
+import { Plus, Trash, Package, Sparkle } from '@phosphor-icons/react'
 import { Card } from '@/components/ui/card'
+import { toast } from 'sonner'
 
 interface BOMManagerProps {
   products: Product[]
@@ -90,17 +91,132 @@ export function BOMManager({ products, onProductsChange, inventory }: BOMManager
     onProductsChange(products.filter(p => p.id !== id))
   }
 
+  const handleLoadSampleData = () => {
+    if (inventory.length === 0) {
+      toast.error('Please add inventory items first before creating products')
+      return
+    }
+
+    const sampleProducts: Product[] = [
+      {
+        id: 'prod-industrial-robot',
+        name: 'Industrial Robot Arm',
+        components: [
+          {
+            id: 'comp-1',
+            componentId: 'inv-electric-motor',
+            componentName: 'Electric Motor 2.5HP',
+            quantityPerUnit: 3,
+            leadTime: 14,
+          },
+          {
+            id: 'comp-2',
+            componentId: 'inv-steel-sheet',
+            componentName: 'Steel Sheet (4x8ft)',
+            quantityPerUnit: 2,
+            leadTime: 7,
+          },
+          {
+            id: 'comp-3',
+            componentId: 'inv-bearings',
+            componentName: 'Ball Bearings 608ZZ',
+            quantityPerUnit: 12,
+            leadTime: 5,
+          },
+          {
+            id: 'comp-4',
+            componentId: 'inv-bolts',
+            componentName: 'Bolts M12x50mm',
+            quantityPerUnit: 24,
+            leadTime: 3,
+          },
+        ],
+      },
+      {
+        id: 'prod-conveyor-system',
+        name: 'Conveyor System Module',
+        components: [
+          {
+            id: 'comp-5',
+            componentId: 'inv-aluminum-bar',
+            componentName: 'Aluminum Bar Stock',
+            quantityPerUnit: 4,
+            leadTime: 10,
+          },
+          {
+            id: 'comp-6',
+            componentId: 'inv-electric-motor',
+            componentName: 'Electric Motor 2.5HP',
+            quantityPerUnit: 1,
+            leadTime: 14,
+          },
+          {
+            id: 'comp-7',
+            componentId: 'inv-bearings',
+            componentName: 'Ball Bearings 608ZZ',
+            quantityPerUnit: 8,
+            leadTime: 5,
+          },
+          {
+            id: 'comp-8',
+            componentId: 'inv-rubber-gasket',
+            componentName: 'Rubber Gasket',
+            quantityPerUnit: 6,
+            leadTime: 7,
+          },
+        ],
+      },
+      {
+        id: 'prod-control-panel',
+        name: 'Control Panel Assembly',
+        components: [
+          {
+            id: 'comp-9',
+            componentId: 'inv-plastic-housing',
+            componentName: 'Plastic Housing Shell',
+            quantityPerUnit: 1,
+            leadTime: 12,
+          },
+          {
+            id: 'comp-10',
+            componentId: 'inv-screws',
+            componentName: 'Wood Screws 4x40mm',
+            quantityPerUnit: 16,
+            leadTime: 2,
+          },
+          {
+            id: 'comp-11',
+            componentId: 'inv-paint',
+            componentName: 'Industrial Paint (5L)',
+            quantityPerUnit: 0.5,
+            leadTime: 5,
+          },
+        ],
+      },
+    ]
+
+    onProductsChange(sampleProducts)
+    toast.success('Sample BOM data loaded successfully')
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Bill of Materials</h2>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()}>
-              <Plus className="mr-2" />
-              Add Product
+        <div className="flex gap-2">
+          {products.length === 0 && inventory.length > 0 && (
+            <Button variant="outline" onClick={handleLoadSampleData}>
+              <Sparkle className="mr-2" />
+              Load Sample Data
             </Button>
-          </DialogTrigger>
+          )}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => handleOpenDialog()}>
+                <Plus className="mr-2" />
+                Add Product
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingProduct ? 'Edit Product' : 'Add New Product'}</DialogTitle>
@@ -192,6 +308,7 @@ export function BOMManager({ products, onProductsChange, inventory }: BOMManager
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {products.length === 0 ? (

@@ -20,11 +20,11 @@ This is an MRP calculator with data input forms, calculation logic, and report g
 - **Success criteria**: BOM data persists and displays in organized table format with parent-child relationships
 
 ### Inventory Input
-- **Functionality**: Track current on-hand inventory and scheduled receipts for all components
-- **Purpose**: Provide baseline inventory data for net requirements calculation
-- **Trigger**: User navigates to Inventory tab or edits inventory inline
-- **Progression**: View inventory table → Click edit on item → Update on-hand quantity → Add scheduled receipts with dates → Save changes
-- **Success criteria**: Inventory values update immediately and reflect in MRP calculations
+- **Functionality**: Track current on-hand inventory and scheduled receipts for all components with detailed receipt tracking
+- **Purpose**: Provide baseline inventory data and planned incoming stock for accurate net requirements calculation
+- **Trigger**: User navigates to Inventory tab, clicks "Add Item", or edits inventory inline
+- **Progression**: View inventory table → Click Add/Edit Item → Update on-hand quantity → Add scheduled receipts with quantities and due dates → Save changes → View in table
+- **Success criteria**: Inventory values update immediately, scheduled receipts display with dates, and all data reflects accurately in MRP calculations
 
 ### Demand Scheduling
 - **Functionality**: Input master production schedule with quantities and due dates

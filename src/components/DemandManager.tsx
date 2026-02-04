@@ -5,8 +5,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Plus, Trash, CalendarBlank } from '@phosphor-icons/react'
+import { Plus, Trash, CalendarBlank, Sparkle } from '@phosphor-icons/react'
 import { Card } from '@/components/ui/card'
+import { toast } from 'sonner'
 
 interface DemandManagerProps {
   demands: Demand[]
@@ -71,17 +72,79 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
     onDemandsChange(demands.filter(d => d.id !== id))
   }
 
+  const handleLoadSampleData = () => {
+    if (products.length === 0) {
+      toast.error('Please add products first before creating demands')
+      return
+    }
+
+    const today = new Date()
+    const getDateOffset = (days: number) => {
+      const date = new Date(today)
+      date.setDate(date.getDate() + days)
+      return date.toISOString().split('T')[0]
+    }
+
+    const sampleDemands: Demand[] = [
+      {
+        id: 'dem-1',
+        productId: products[0]?.id || '',
+        productName: products[0]?.name || '',
+        quantity: 5,
+        dueDate: getDateOffset(14),
+      },
+      {
+        id: 'dem-2',
+        productId: products[1]?.id || products[0]?.id || '',
+        productName: products[1]?.name || products[0]?.name || '',
+        quantity: 8,
+        dueDate: getDateOffset(21),
+      },
+      {
+        id: 'dem-3',
+        productId: products[0]?.id || '',
+        productName: products[0]?.name || '',
+        quantity: 3,
+        dueDate: getDateOffset(28),
+      },
+      {
+        id: 'dem-4',
+        productId: products[2]?.id || products[0]?.id || '',
+        productName: products[2]?.name || products[0]?.name || '',
+        quantity: 12,
+        dueDate: getDateOffset(35),
+      },
+      {
+        id: 'dem-5',
+        productId: products[1]?.id || products[0]?.id || '',
+        productName: products[1]?.name || products[0]?.name || '',
+        quantity: 6,
+        dueDate: getDateOffset(42),
+      },
+    ]
+
+    onDemandsChange(sampleDemands.filter(d => d.productId))
+    toast.success('Sample demand data loaded successfully')
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Demand Schedule</h2>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()} disabled={products.length === 0}>
-              <Plus className="mr-2" />
-              Add Demand
+        <div className="flex gap-2">
+          {demands.length === 0 && products.length > 0 && (
+            <Button variant="outline" onClick={handleLoadSampleData}>
+              <Sparkle className="mr-2" />
+              Load Sample Data
             </Button>
-          </DialogTrigger>
+          )}
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={() => handleOpenDialog()} disabled={products.length === 0}>
+                <Plus className="mr-2" />
+                Add Demand
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editingDemand ? 'Edit Demand' : 'Add New Demand'}</DialogTitle>
@@ -135,6 +198,7 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {products.length === 0 ? (
