@@ -33,19 +33,19 @@ export function BOMManager({ products, onProductsChange, inventory }: BOMManager
   }
 
   const handleRemoveComponent = (id: string) => {
-    setComponents(components.filter(c => c.id !== id))
+    setComponents(components.filter(component => component.id !== id))
   }
 
   const handleComponentChange = (id: string, field: keyof BOMComponent, value: string | number) => {
-    setComponents(components.map(c => {
-      if (c.id === id) {
+    setComponents(components.map(component => {
+      if (component.id === id) {
         if (field === 'componentId') {
-          const invItem = inventory.find(i => i.id === value)
-          return { ...c, componentId: value as string, componentName: invItem?.name || '' }
+          const inventoryItem = inventory.find(inventoryItem => inventoryItem.id === value)
+          return { ...component, componentId: value as string, componentName: inventoryItem?.name || '' }
         }
-        return { ...c, [field]: value }
+        return { ...component, [field]: value }
       }
-      return c
+      return component
     }))
   }
 
@@ -59,7 +59,7 @@ export function BOMManager({ products, onProductsChange, inventory }: BOMManager
     }
 
     if (editingProduct) {
-      onProductsChange(products.map(p => p.id === editingProduct.id ? newProduct : p))
+      onProductsChange(products.map(existingProduct => existingProduct.id === editingProduct.id ? newProduct : existingProduct))
     } else {
       onProductsChange([...products, newProduct])
     }
@@ -88,7 +88,7 @@ export function BOMManager({ products, onProductsChange, inventory }: BOMManager
   }
 
   const handleDeleteProduct = (id: string) => {
-    onProductsChange(products.filter(p => p.id !== id))
+    onProductsChange(products.filter(existingProduct => existingProduct.id !== id))
   }
 
   const handleLoadSampleData = () => {

@@ -13,21 +13,21 @@ interface MRPReportProps {
 
 export function MRPReport({ results, onCalculate, hasData }: MRPReportProps) {
   const handleExport = () => {
-    let csv = 'Item,Period,Date,Gross Requirements,Scheduled Receipts,Projected On-Hand,Net Requirements,Planned Order Receipt,Planned Order Release\n'
+    let csvContent = 'Item,Period,Date,Gross Requirements,Scheduled Receipts,Projected On-Hand,Net Requirements,Planned Order Receipt,Planned Order Release\n'
     
     results.forEach(row => {
       row.periods.forEach(period => {
-        csv += `${row.itemName},${period.period},${period.date},${period.grossRequirements},${period.scheduledReceipts},${period.projectedOnHand},${period.netRequirements},${period.plannedOrderReceipt},${period.plannedOrderRelease}\n`
+        csvContent += `${row.itemName},${period.period},${period.date},${period.grossRequirements},${period.scheduledReceipts},${period.projectedOnHand},${period.netRequirements},${period.plannedOrderReceipt},${period.plannedOrderRelease}\n`
       })
     })
 
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = window.URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `mrp-report-${new Date().toISOString().split('T')[0]}.csv`
-    a.click()
-    window.URL.revokeObjectURL(url)
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' })
+    const csvDownloadUrl = window.URL.createObjectURL(csvBlob)
+    const csvDownloadAnchor = document.createElement('a')
+    csvDownloadAnchor.href = csvDownloadUrl
+    csvDownloadAnchor.download = `mrp-report-${new Date().toISOString().split('T')[0]}.csv`
+    csvDownloadAnchor.click()
+    window.URL.revokeObjectURL(csvDownloadUrl)
   }
 
   if (!hasData) {

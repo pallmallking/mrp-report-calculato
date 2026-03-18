@@ -36,11 +36,11 @@ export function InventoryManager({ inventory, onInventoryChange }: InventoryMana
   }
 
   const handleRemoveReceipt = (id: string) => {
-    setReceipts(receipts.filter(r => r.id !== id))
+    setReceipts(receipts.filter(existingReceipt => existingReceipt.id !== id))
   }
 
   const handleReceiptChange = (id: string, field: keyof ScheduledReceipt, value: string | number) => {
-    setReceipts(receipts.map(r => r.id === id ? { ...r, [field]: value } : r))
+    setReceipts(receipts.map(existingReceipt => existingReceipt.id === id ? { ...existingReceipt, [field]: value } : existingReceipt))
   }
 
   const handleSaveItem = () => {
@@ -57,7 +57,7 @@ export function InventoryManager({ inventory, onInventoryChange }: InventoryMana
     }
 
     if (editingItem) {
-      onInventoryChange(inventory.map(i => i.id === editingItem.id ? newItem : i))
+      onInventoryChange(inventory.map(existingItem => existingItem.id === editingItem.id ? newItem : existingItem))
       toast.success(`${itemName} updated successfully`)
     } else {
       onInventoryChange([...inventory, newItem])
@@ -91,8 +91,8 @@ export function InventoryManager({ inventory, onInventoryChange }: InventoryMana
   }
 
   const handleDeleteItem = (id: string) => {
-    const item = inventory.find(i => i.id === id)
-    onInventoryChange(inventory.filter(i => i.id !== id))
+    const item = inventory.find(existingItem => existingItem.id === id)
+    onInventoryChange(inventory.filter(existingItem => existingItem.id !== id))
     toast.success(`${item?.name || 'Item'} removed from inventory`)
   }
 
