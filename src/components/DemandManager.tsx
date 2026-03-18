@@ -25,7 +25,7 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
   const handleSaveDemand = () => {
     if (!productId) return
 
-    const product = products.find(p => p.id === productId)
+    const product = products.find(selectedProduct => selectedProduct.id === productId)
     if (!product) return
 
     const newDemand: Demand = {
@@ -37,7 +37,7 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
     }
 
     if (editingDemand) {
-      onDemandsChange(demands.map(d => d.id === editingDemand.id ? newDemand : d))
+      onDemandsChange(demands.map(existingDemand => existingDemand.id === editingDemand.id ? newDemand : existingDemand))
     } else {
       onDemandsChange([...demands, newDemand])
     }
@@ -69,7 +69,7 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
   }
 
   const handleDeleteDemand = (id: string) => {
-    onDemandsChange(demands.filter(d => d.id !== id))
+    onDemandsChange(demands.filter(existingDemand => existingDemand.id !== id))
   }
 
   const handleLoadSampleData = () => {
@@ -123,7 +123,7 @@ export function DemandManager({ demands, onDemandsChange, products }: DemandMana
       },
     ]
 
-    onDemandsChange(sampleDemands.filter(d => d.productId))
+    onDemandsChange(sampleDemands.filter(sampleDemand => sampleDemand.productId))
     toast.success('Sample demand data loaded successfully')
   }
 
